@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Estimation Tool - Launcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .versions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .version-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .version-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .version-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .version-icon {
+            font-size: 3em;
+            margin-right: 15px;
+        }
+
+        .version-title h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .version-subtitle {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .version-features {
+            margin: 20px 0;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .feature::before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .version-requirements {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .version-requirements strong {
+            color: #856404;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: scale(1.05);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .quick-start {
+            background: #e7f3ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .quick-start h3 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+
+        .command-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .command-box code {
+            color: #4ec9b0;
+        }
+
+        .docs-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .docs-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .doc-link {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .doc-link:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .doc-icon {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .versions {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 30px 0;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .check {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .cross {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Project Estimation Tool</h1>
+            <p>Choose your version and start estimating</p>
+        </div>
+
+        <div class="versions">
+            <!-- Python Version -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-icon">🐍</div>
+                    <div class="version-title">
+                        <h2>Python Version</h2>
+                        <p class="version-subtitle">Standalone - No Node.js Required</p>
+                    </div>
+                </div>
+
+                <div class="version-features">
+                    <div class="feature">Single file - super simple</div>
+                    <div class="feature">No dependencies needed</div>
+                    <div class="feature">Setup in 30 seconds</div>
+                    <div class="feature">All core features included</div>
+                    <div class="feature">JSON & CSV export</div>
+                </div>
+
+                <div class="version-requirements">
+                    <strong>⚡ Requirements:</strong> Python 3.7+ only
+                </div>
+
+                <span class="status-badge status-ready">✓ READY TO USE</span>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="showPythonInstructions()">
+                        Launch Python Version
+                    </button>
+                    <a href="standalone-python/README.md" class="btn btn-secondary">
+                        📖 Python Docs
+                    </a>
+                </div>
+            </div>
+
+            <!-- Node.js Version -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-icon">🟢</div>
+                    <div class="version-title">
+                        <h2>Node.js Version</h2>
+                        <p class="version-subtitle">Full-Featured with AI Integration</p>
+                    </div>
+                </div>
+
+                <div class="version-features">
+                    <div class="feature">8 TypeScript modules</div>
+                    <div class="feature">6 AI prompt templates</div>
+                    <div class="feature">Type-safe architecture</div>
+                    <div class="feature">Easy to extend</div>
+                    <div class="feature">Professional CLI</div>
+                </div>
+
+                <div class="version-requirements">
+                    <strong>⚡ Requirements:</strong> Node.js 18+ with npm
+                </div>
+
+                <span class="status-badge status-ready">✓ READY TO USE</span>
+
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="showNodeInstructions()">
+                        Launch Node.js Version
+                    </button>
+                    <a href="migration-package/README.md" class="btn btn-secondary">
+                        📖 Node.js Docs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start Instructions -->
+        <div id="instructions" style="display: none;">
+            <!-- Dynamically populated -->
+        </div>
+
+        <!-- Feature Comparison -->
+        <div style="margin: 40px 0;">
+            <h3 style="text-align: center; color: #333; margin-bottom: 20px;">Feature Comparison</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Python</th>
+                        <th>Node.js</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>T-Shirt Size Mapping</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Role-Based Estimation</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Holiday Handling</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Cost Calculation</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>JSON/CSV Export</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>AI Prompt Templates</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓ (6 templates)</td>
+                    </tr>
+                    <tr>
+                        <td>Type Safety</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓ (TypeScript)</td>
+                    </tr>
+                    <tr>
+                        <td>Dependencies</td>
+                        <td class="check">✓ None</td>
+                        <td class="cross">~50 packages</td>
+                    </tr>
+                    <tr>
+                        <td>Setup Time</td>
+                        <td class="check">✓ &lt;30 sec</td>
+                        <td>~1 minute</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Documentation Links -->
+        <div class="docs-section">
+            <h3>📚 Documentation & Resources</h3>
+            <div class="docs-grid">
+                <a href="START_HERE.txt" class="doc-link">
+                    <span class="doc-icon">🚀</span>
+                    <span>Start Here Guide</span>
+                </a>
+                <a href="COMPLETE_PACKAGE_README.md" class="doc-link">
+                    <span class="doc-icon">📦</span>
+                    <span>Complete Overview</span>
+                </a>
+                <a href="MIGRATION_GUIDE.md" class="doc-link">
+                    <span class="doc-icon">🔄</span>
+                    <span>Migration Guide</span>
+                </a>
+                <a href="INSTALLATION.md" class="doc-link">
+                    <span class="doc-icon">⚙️</span>
+                    <span>Installation Guide</span>
+                </a>
+                <a href="DELIVERY_SUMMARY.md" class="doc-link">
+                    <span class="doc-icon">✅</span>
+                    <span>Delivery Summary</span>
+                </a>
+                <a href="BUILD_COMPLETE.txt" class="doc-link">
+                    <span class="doc-icon">🏗️</span>
+                    <span>Build Details</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Project Estimation Tool</strong></p>
+            <p>Built with TypeScript + Python | Replaces Excel Spreadsheets</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                ⭐ Choose Python for simplicity | Choose Node.js for full features | Use both!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showPythonInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.innerHTML = `
+                <div class="quick-start">
+                    <h3>🐍 Python Version - Quick Start</h3>
+                    
+                    <p><strong>Step 1:</strong> Open terminal/command prompt</p>
+                    <div class="command-box">
+                        <code>cd standalone-python</code>
+                    </div>
+
+                    <p><strong>Step 2:</strong> Generate example files (first time only)</p>
+                    <div class="command-box">
+                        <code>python estimator.py --example</code>
+                    </div>
+
+                    <p><strong>Step 3:</strong> Run estimation</p>
+                    <div class="command-box">
+                        <code>python estimator.py</code>
+                    </div>
+
+                    <p><strong>Windows Quick Start:</strong> Just double-click <code>RUN_EXAMPLE.bat</code></p>
+
+                    <p><strong>Export to CSV:</strong></p>
+                    <div class="command-box">
+                        <code>python estimator.py --csv</code>
+                    </div>
+
+                    <p style="margin-top: 20px;">
+                        <strong>📝 Input:</strong> Edit <code>backlog.json</code> with your features<br>
+                        <strong>📊 Output:</strong> <code>estimation.json</code> or <code>estimation.csv</code>
+                    </p>
+
+                    <button class="btn btn-secondary" onclick="hideInstructions()" style="margin-top: 20px;">
+                        Close Instructions
+                    </button>
+                </div>
+            `;
+            instructions.style.display = 'block';
+            instructions.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showNodeInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.innerHTML = `
+                <div class="quick-start">
+                    <h3>🟢 Node.js Version - Quick Start</h3>
+                    
+                    <p><strong>Step 1:</strong> Open terminal/command prompt</p>
+                    <div class="command-box">
+                        <code>cd migration-package</code>
+                    </div>
+
+                    <p><strong>Step 2:</strong> Run setup (first time only)</p>
+                    <div class="command-box">
+                        <code># Windows:<br>SETUP.bat<br><br># Mac/Linux:<br>chmod +x SETUP.sh && ./SETUP.sh</code>
+                    </div>
+
+                    <p><strong>Or manual setup:</strong></p>
+                    <div class="command-box">
+                        <code>npm install<br>npm run estimate -- --example<br>npm run estimate</code>
+                    </div>
+
+                    <p><strong>Common Commands:</strong></p>
+                    <div class="command-box">
+                        <code># Run estimation<br>npm run estimate<br><br># Export to CSV<br>npm run estimate -- --csv<br><br># View AI prompts<br>npm run estimate -- --prompts<br><br># Help<br>npm run estimate -- --help</code>
+                    </div>
+
+                    <p style="margin-top: 20px;">
+                        <strong>📝 Input:</strong> Edit <code>backlog.json</code> with your features<br>
+                        <strong>📊 Output:</strong> <code>estimation.json</code> or <code>estimation.csv</code><br>
+                        <strong>🤖 AI Prompts:</strong> 6 templates for ChatGPT/Claude integration
+                    </p>
+
+                    <button class="btn btn-secondary" onclick="hideInstructions()" style="margin-top: 20px;">
+                        Close Instructions
+                    </button>
+                </div>
+            `;
+            instructions.style.display = 'block';
+            instructions.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hideInstructions() {
+            document.getElementById('instructions').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

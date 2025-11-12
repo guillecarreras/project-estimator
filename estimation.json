@@ -1,0 +1,323 @@
+{
+  "backlogItemCount": 10,
+  "totalBaseHours": 972,
+  "roleEfforts": [
+    {
+      "role": "Fullstack",
+      "baseHours": 234,
+      "withMultipliers": 339.3,
+      "totalHours": 390.195,
+      "fte": 6.5032499999999995,
+      "cost": 33166.575
+    },
+    {
+      "role": "QA",
+      "baseHours": 234,
+      "withMultipliers": 339.3,
+      "totalHours": 390.195,
+      "fte": 6.5032499999999995,
+      "cost": 23411.7
+    },
+    {
+      "role": "DevOps",
+      "baseHours": 60,
+      "withMultipliers": 87,
+      "totalHours": 100.05,
+      "fte": 1.6675,
+      "cost": 9004.5
+    },
+    {
+      "role": "UX",
+      "baseHours": 48,
+      "withMultipliers": 69.60000000000001,
+      "totalHours": 80.04,
+      "fte": 1.334,
+      "cost": 6403.200000000001
+    },
+    {
+      "role": "BA",
+      "baseHours": 198,
+      "withMultipliers": 198,
+      "totalHours": 198,
+      "fte": 0.5,
+      "cost": 13860
+    },
+    {
+      "role": "SM",
+      "baseHours": 198,
+      "withMultipliers": 198,
+      "totalHours": 198,
+      "fte": 0.5,
+      "cost": 14850
+    }
+  ],
+  "teamComposition": [
+    {
+      "role": "Fullstack",
+      "count": 7,
+      "allocationPercentage": 100
+    },
+    {
+      "role": "QA",
+      "count": 7,
+      "allocationPercentage": 100
+    },
+    {
+      "role": "DevOps",
+      "count": 2,
+      "allocationPercentage": 100
+    },
+    {
+      "role": "UX",
+      "count": 2,
+      "allocationPercentage": 100
+    },
+    {
+      "role": "BA",
+      "count": 1,
+      "allocationPercentage": 50
+    },
+    {
+      "role": "SM",
+      "count": 1,
+      "allocationPercentage": 50
+    }
+  ],
+  "totalCost": 100695.97499999999,
+  "durationDays": 92.39999999999999,
+  "durationWeeks": 14,
+  "durationSprints": 7,
+  "startDate": "2025-11-12",
+  "endDate": "2026-02-16",
+  "workingDays": 66,
+  "assumptions": [
+    "Working 6 productive hours per day",
+    "Sprint length: 2 weeks",
+    "Contingency: 15%",
+    "Bug fixing overhead: 20%",
+    "Documentation overhead: 10%",
+    "Unit testing overhead: 15%",
+    "QA ratio: 1 QA per 3 Developers",
+    "BA, SM, UX allocated throughout project at 50%",
+    "Brazilian holidays excluded from working days",
+    "Weekends excluded from working days"
+  ],
+  "ganttData": [
+    {
+      "epic": "Authentication",
+      "feature": "User Login",
+      "role": "Fullstack",
+      "startDate": "2025-11-12",
+      "endDate": "2025-11-20",
+      "hours": 30.015,
+      "days": 6
+    },
+    {
+      "epic": "Authentication",
+      "feature": "User Login",
+      "role": "QA",
+      "startDate": "2025-11-12",
+      "endDate": "2025-11-20",
+      "hours": 30.015,
+      "days": 6
+    },
+    {
+      "epic": "Authentication",
+      "feature": "Password Reset",
+      "role": "Fullstack",
+      "startDate": "2025-11-20",
+      "endDate": "2025-11-25",
+      "hours": 15.0075,
+      "days": 3
+    },
+    {
+      "epic": "Authentication",
+      "feature": "Password Reset",
+      "role": "QA",
+      "startDate": "2025-11-20",
+      "endDate": "2025-11-25",
+      "hours": 15.0075,
+      "days": 3
+    },
+    {
+      "epic": "Authentication",
+      "feature": "OAuth Integration",
+      "role": "Fullstack",
+      "startDate": "2025-11-25",
+      "endDate": "2025-12-04",
+      "hours": 40.02,
+      "days": 7
+    },
+    {
+      "epic": "Authentication",
+      "feature": "OAuth Integration",
+      "role": "DevOps",
+      "startDate": "2025-11-25",
+      "endDate": "2025-12-04",
+      "hours": 40.02,
+      "days": 7
+    },
+    {
+      "epic": "Authentication",
+      "feature": "OAuth Integration",
+      "role": "QA",
+      "startDate": "2025-11-25",
+      "endDate": "2025-12-04",
+      "hours": 40.02,
+      "days": 7
+    },
+    {
+      "epic": "User Profile",
+      "feature": "Profile Page",
+      "role": "Fullstack",
+      "startDate": "2025-12-04",
+      "endDate": "2025-12-10",
+      "hours": 20.01,
+      "days": 4
+    },
+    {
+      "epic": "User Profile",
+      "feature": "Profile Page",
+      "role": "UX",
+      "startDate": "2025-12-04",
+      "endDate": "2025-12-10",
+      "hours": 20.01,
+      "days": 4
+    },
+    {
+      "epic": "User Profile",
+      "feature": "Profile Page",
+      "role": "QA",
+      "startDate": "2025-12-04",
+      "endDate": "2025-12-10",
+      "hours": 20.01,
+      "days": 4
+    },
+    {
+      "epic": "User Profile",
+      "feature": "Avatar Upload",
+      "role": "Fullstack",
+      "startDate": "2025-12-10",
+      "endDate": "2025-12-15",
+      "hours": 15.0075,
+      "days": 3
+    },
+    {
+      "epic": "User Profile",
+      "feature": "Avatar Upload",
+      "role": "QA",
+      "startDate": "2025-12-10",
+      "endDate": "2025-12-15",
+      "hours": 15.0075,
+      "days": 3
+    },
+    {
+      "epic": "Dashboard",
+      "feature": "Analytics Dashboard",
+      "role": "Fullstack",
+      "startDate": "2025-12-15",
+      "endDate": "2025-12-31",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Dashboard",
+      "feature": "Analytics Dashboard",
+      "role": "UX",
+      "startDate": "2025-12-15",
+      "endDate": "2025-12-31",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Dashboard",
+      "feature": "Analytics Dashboard",
+      "role": "QA",
+      "startDate": "2025-12-15",
+      "endDate": "2025-12-31",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Dashboard",
+      "feature": "Data Export",
+      "role": "Fullstack",
+      "startDate": "2025-12-31",
+      "endDate": "2026-01-09",
+      "hours": 30.015,
+      "days": 6
+    },
+    {
+      "epic": "Dashboard",
+      "feature": "Data Export",
+      "role": "QA",
+      "startDate": "2025-12-31",
+      "endDate": "2026-01-09",
+      "hours": 30.015,
+      "days": 6
+    },
+    {
+      "epic": "Notifications",
+      "feature": "Email Notifications",
+      "role": "Fullstack",
+      "startDate": "2026-01-09",
+      "endDate": "2026-01-26",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Notifications",
+      "feature": "Email Notifications",
+      "role": "QA",
+      "startDate": "2026-01-09",
+      "endDate": "2026-01-26",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Notifications",
+      "feature": "Push Notifications",
+      "role": "Fullstack",
+      "startDate": "2026-01-26",
+      "endDate": "2026-02-10",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Notifications",
+      "feature": "Push Notifications",
+      "role": "DevOps",
+      "startDate": "2026-01-26",
+      "endDate": "2026-02-10",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Notifications",
+      "feature": "Push Notifications",
+      "role": "QA",
+      "startDate": "2026-01-26",
+      "endDate": "2026-02-10",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Admin Panel",
+      "feature": "User Management",
+      "role": "Fullstack",
+      "startDate": "2026-02-10",
+      "endDate": "2026-02-26",
+      "hours": 60.03,
+      "days": 11
+    },
+    {
+      "epic": "Admin Panel",
+      "feature": "User Management",
+      "role": "QA",
+      "startDate": "2026-02-10",
+      "endDate": "2026-02-26",
+      "hours": 60.03,
+      "days": 11
+    }
+  ]
+}
