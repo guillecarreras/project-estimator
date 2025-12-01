@@ -16,9 +16,7 @@ beautifulsoup4==4.12.2
 lxml==4.9.3
 pypandoc==1.12
 
-# For QA and validation
-difflib
-hashlib
+# Note: difflib and hashlib are built-in Python modules
 
 # Utilities
 python-dateutil==2.8.2
