@@ -6,6 +6,7 @@ A powerful, professional tool to merge content from multiple source files into G
 
 - 🔍 **Smart File Discovery**: Find files by keyword matching in filenames
 - 📄 **Multi-Format Support**: PDF, Markdown (.md), Plain Text (.txt), Word Documents (.doc/.docx)
+- 🔢 **Custom File Ordering**: Define the exact sequence in which files are merged
 - 🔄 **Real-Time Progress**: Live table display showing processing status for each file
 - ✅ **Comprehensive QA Verification**: Character-by-character content validation to ensure no summarization or rephrasing
 - 📊 **Google Docs Integration**: Automated professional document creation with formatting
@@ -133,7 +134,19 @@ Upload a sample document for the tool to analyze its structure. This helps optim
 
 The tool will search for matching files and display them for review.
 
-#### Step 4: Processing
+#### Step 4: File Ordering
+
+Define the order in which files should be merged:
+
+1. The tool displays all found files with numbers
+2. You choose whether to keep the default order or customize it
+3. To customize, enter the numbers in your desired order
+   - Example: `3 1 2` merges file #3 first, then #1, then #2
+4. Confirm the order before proceeding
+
+This ensures content is merged in exactly the sequence you need!
+
+#### Step 5: Processing
 
 Watch real-time progress as files are processed:
 
@@ -145,7 +158,7 @@ Watch real-time progress as files are processed:
 | Document_3.pdf            | Y         | Y      | Y         |
 ```
 
-#### Step 5: QA Verification
+#### Step 6: QA Verification
 
 The tool performs comprehensive quality checks:
 - ✓ Character count verification
@@ -154,7 +167,7 @@ The tool performs comprehensive quality checks:
 - ✓ Summarization detection
 - ✓ Sentence-level verification
 
-#### Step 6: Google Doc Creation
+#### Step 7: Google Doc Creation
 
 If QA passes, a professional Google Doc is created and the URL is displayed.
 

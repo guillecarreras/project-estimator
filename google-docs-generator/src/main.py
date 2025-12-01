@@ -87,8 +87,12 @@ def main():
 
         console.print(f"[green]Found {len(files)} file(s) to process[/green]\n")
 
-        # Step 4: Initialize components
-        console.print("[bold blue]Step 4:[/bold blue] Initializing Processing Pipeline\n")
+        # Step 4: Order files
+        console.print("[bold blue]Step 4:[/bold blue] File Ordering\n")
+        files = cli.order_files(files)
+
+        # Step 5: Initialize components
+        console.print("\n[bold blue]Step 5:[/bold blue] Initializing Processing Pipeline\n")
 
         # Select appropriate parser
         parser_map = {
@@ -110,8 +114,8 @@ def main():
         qa_verifier = QAVerifier(console)
         progress_tracker = ProgressTracker(console, len(files))
 
-        # Step 5: Process files
-        console.print("\n[bold blue]Step 5:[/bold blue] Processing Files\n")
+        # Step 6: Process files
+        console.print("\n[bold blue]Step 6:[/bold blue] Processing Files\n")
         progress_tracker.start()
 
         all_content = []
@@ -140,8 +144,8 @@ def main():
                 progress_tracker.update_file(file_name, processed=False, merged=False, qa_passed=False)
                 continue
 
-        # Step 6: Merge content
-        console.print("\n[bold blue]Step 6:[/bold blue] Merging Content\n")
+        # Step 7: Merge content
+        console.print("\n[bold blue]Step 7:[/bold blue] Merging Content\n")
 
         try:
             merged_content = merger.merge(all_content, sample_analysis)
@@ -155,8 +159,8 @@ def main():
             console.print(f"[red]Error merging content: {str(e)}[/red]")
             return
 
-        # Step 7: QA Verification
-        console.print("\n[bold blue]Step 7:[/bold blue] Quality Assurance\n")
+        # Step 8: QA Verification
+        console.print("\n[bold blue]Step 8:[/bold blue] Quality Assurance\n")
 
         qa_results = qa_verifier.verify(all_content, merged_content)
 
@@ -177,8 +181,8 @@ def main():
                 console.print("[yellow]Operation cancelled due to QA failure.[/yellow]")
                 return
 
-        # Step 8: Create Google Doc
-        console.print("\n[bold blue]Step 8:[/bold blue] Creating Google Doc\n")
+        # Step 9: Create Google Doc
+        console.print("\n[bold blue]Step 9:[/bold blue] Creating Google Doc\n")
 
         try:
             doc_url = docs_creator.create_document(

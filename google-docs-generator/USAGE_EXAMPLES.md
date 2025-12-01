@@ -42,7 +42,35 @@ D:\Projects\SprintHealth\
    ✓ Found: Contenido_Consolidado_Sprint4.docx
    ```
 
-5. **Watch processing**
+5. **Order the files** (new feature!)
+   ```
+   Found Files (Current Order):
+   #  File Name
+   1  Contenido_Consolidado_Sprint1.docx
+   2  Contenido_Consolidado_Sprint2.docx
+   3  Contenido_Consolidado_Sprint3.docx
+   4  Contenido_Consolidado_Sprint4.docx
+
+   Would you like to change the order of files? (Y/n): n
+   Using default order (as listed above)
+   ```
+
+   Or if you want to merge them in a different order (e.g., Sprint 4, 3, 2, 1):
+   ```
+   Would you like to change the order of files? (Y/n): y
+   Enter order (numbers 1-4): 4 3 2 1
+
+   New Order:
+   1  Contenido_Consolidado_Sprint4.docx
+   2  Contenido_Consolidado_Sprint3.docx
+   3  Contenido_Consolidado_Sprint2.docx
+   4  Contenido_Consolidado_Sprint1.docx
+
+   Is this order correct? (Y/n): y
+   ✓ File order confirmed
+   ```
+
+6. **Watch processing**
    ```
    | File Name                          | Processed | Merged | QA Passed |
    |------------------------------------|-----------|--------|-----------|
@@ -52,7 +80,7 @@ D:\Projects\SprintHealth\
    | Contenido_Consolidado_Sprint4.docx | Y         | Y      | Y         |
    ```
 
-6. **QA Results**
+7. **QA Results**
    ```
    ✓ Check 1: Character count verification... PASSED
    ✓ Check 2: Word count verification... PASSED
@@ -63,7 +91,7 @@ D:\Projects\SprintHealth\
    ✓ All QA checks passed!
    ```
 
-7. **Result**
+8. **Result**
    ```
    ✓ Success!
 

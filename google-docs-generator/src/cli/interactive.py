@@ -197,3 +197,96 @@ class InteractiveCLI:
             table.add_row("...", f"... and {len(files) - max_display} more", "...")
 
         self.console.print(table)
+
+    def order_files(self, files):
+        """
+        Allow user to define the order in which files should be merged
+
+        Args:
+            files: List of file paths (in discovery order)
+
+        Returns:
+            list: Ordered list of file paths, or original list if user skips
+        """
+        self.console.print("\n[bold cyan]File Ordering[/bold cyan]")
+        self.console.print("The files will be merged in the order you specify.")
+        self.console.print()
+
+        # Display files with numbers
+        table = Table(show_header=True, header_style="bold magenta", title="Found Files (Current Order)")
+        table.add_column("#", style="cyan", width=6, justify="center")
+        table.add_column("File Name", style="green", width=50)
+        table.add_column("Path", style="blue")
+
+        for i, file_path in enumerate(files, 1):
+            file_name = os.path.basename(file_path)
+            dir_path = os.path.dirname(file_path)
+            # Truncate long paths
+            if len(dir_path) > 40:
+                dir_path = "..." + dir_path[-37:]
+            table.add_row(str(i), file_name, dir_path)
+
+        self.console.print(table)
+        self.console.print()
+
+        # Ask if user wants to reorder
+        if not Confirm.ask("[cyan]Would you like to change the order of files?[/cyan]", default=True):
+            self.console.print("[green]Using default order (as listed above)[/green]")
+            return files
+
+        self.console.print("\n[yellow]Instructions:[/yellow]")
+        self.console.print("  - Enter the numbers in the order you want the files merged")
+        self.console.print("  - Separate numbers with spaces or commas")
+        self.console.print(f"  - Example: 3 1 2  or  3, 1, 2  (to merge file #3 first, then #1, then #2)")
+        self.console.print()
+
+        while True:
+            try:
+                order_input = Prompt.ask(
+                    f"  Enter order (numbers 1-{len(files)})",
+                    default=" ".join(str(i) for i in range(1, len(files) + 1))
+                )
+
+                # Parse input (handle spaces and commas)
+                order_input = order_input.replace(',', ' ')
+                order_numbers = [int(x.strip()) for x in order_input.split() if x.strip()]
+
+                # Validate
+                if len(order_numbers) != len(files):
+                    self.console.print(f"[red]Error: You must specify {len(files)} numbers (you provided {len(order_numbers)})[/red]")
+                    continue
+
+                if set(order_numbers) != set(range(1, len(files) + 1)):
+                    self.console.print(f"[red]Error: You must use each number from 1 to {len(files)} exactly once[/red]")
+                    continue
+
+                # Create ordered list
+                ordered_files = [files[num - 1] for num in order_numbers]
+
+                # Display new order for confirmation
+                self.console.print("\n[bold cyan]New Order:[/bold cyan]")
+                table = Table(show_header=True, header_style="bold green")
+                table.add_column("Merge Order", style="cyan", width=12, justify="center")
+                table.add_column("File Name", style="green", width=50)
+
+                for i, file_path in enumerate(ordered_files, 1):
+                    file_name = os.path.basename(file_path)
+                    table.add_row(str(i), file_name)
+
+                self.console.print(table)
+                self.console.print()
+
+                # Confirm
+                if Confirm.ask("[cyan]Is this order correct?[/cyan]", default=True):
+                    self.console.print("[green]✓ File order confirmed[/green]\n")
+                    return ordered_files
+                else:
+                    self.console.print("[yellow]Let's try again...[/yellow]\n")
+                    continue
+
+            except ValueError:
+                self.console.print("[red]Error: Please enter valid numbers only[/red]")
+                continue
+            except KeyboardInterrupt:
+                self.console.print("\n[yellow]Keeping default order[/yellow]")
+                return files
