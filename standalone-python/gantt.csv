@@ -1,0 +1,25 @@
+Epic,Feature,Role,Start Date,End Date,Hours,Days
+Authentication,User Login,Fullstack,2026-03-10,2026-03-18,30,6
+Authentication,User Login,QA,2026-03-10,2026-03-18,30,6
+Authentication,Password Reset,Fullstack,2026-03-18,2026-03-23,15,3
+Authentication,Password Reset,QA,2026-03-18,2026-03-23,15,3
+Authentication,OAuth Integration,Fullstack,2026-03-23,2026-04-01,40,7
+Authentication,OAuth Integration,DevOps,2026-03-23,2026-04-01,40,7
+Authentication,OAuth Integration,QA,2026-03-23,2026-04-01,40,7
+User Profile,Profile Page,Fullstack,2026-04-01,2026-04-08,20,4
+User Profile,Profile Page,UX,2026-04-01,2026-04-08,20,4
+User Profile,Profile Page,QA,2026-04-01,2026-04-08,20,4
+User Profile,Avatar Upload,Fullstack,2026-04-08,2026-04-13,15,3
+User Profile,Avatar Upload,QA,2026-04-08,2026-04-13,15,3
+Dashboard,Analytics Dashboard,Fullstack,2026-04-13,2026-04-29,60,11
+Dashboard,Analytics Dashboard,UX,2026-04-13,2026-04-29,60,11
+Dashboard,Analytics Dashboard,QA,2026-04-13,2026-04-29,60,11
+Dashboard,Data Export,Fullstack,2026-04-29,2026-05-08,30,6
+Dashboard,Data Export,QA,2026-04-29,2026-05-08,30,6
+Notifications,Email Notifications,Fullstack,2026-05-08,2026-05-25,60,11
+Notifications,Email Notifications,QA,2026-05-08,2026-05-25,60,11
+Notifications,Push Notifications,Fullstack,2026-05-25,2026-06-10,60,11
+Notifications,Push Notifications,DevOps,2026-05-25,2026-06-10,60,11
+Notifications,Push Notifications,QA,2026-05-25,2026-06-10,60,11
+Admin Panel,User Management,Fullstack,2026-06-10,2026-06-25,60,11
+Admin Panel,User Management,QA,2026-06-10,2026-06-25,60,11
