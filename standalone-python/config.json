@@ -1,0 +1,9 @@
+{
+  "hoursPerDay": 6,
+  "sprintLengthWeeks": 2,
+  "unitTestingPercentage": 15,
+  "bugFixingPercentage": 20,
+  "documentationPercentage": 10,
+  "contingencyPercentage": 15,
+  "startDate": "2025-11-03"
+}

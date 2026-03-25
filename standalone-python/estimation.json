@@ -1,10 +1,10 @@
 {
   "backlogItemCount": 10,
-  "totalBaseHours": 972,
+  "totalBaseHours": 966.0,
   "roleEfforts": [
     {
       "role": "Fullstack",
-      "baseHours": 234,
+      "baseHours": 234.0,
       "withMultipliers": 339.3,
       "totalHours": 390.195,
       "fte": 6.5032499999999995,
@@ -12,7 +12,7 @@
     },
     {
       "role": "QA",
-      "baseHours": 234,
+      "baseHours": 234.0,
       "withMultipliers": 339.3,
       "totalHours": 390.195,
       "fte": 6.5032499999999995,
@@ -20,15 +20,15 @@
     },
     {
       "role": "DevOps",
-      "baseHours": 60,
-      "withMultipliers": 87,
+      "baseHours": 60.0,
+      "withMultipliers": 87.0,
       "totalHours": 100.05,
       "fte": 1.6675,
       "cost": 9004.5
     },
     {
       "role": "UX",
-      "baseHours": 48,
+      "baseHours": 48.0,
       "withMultipliers": 69.60000000000001,
       "totalHours": 80.04,
       "fte": 1.334,
@@ -36,19 +36,19 @@
     },
     {
       "role": "BA",
-      "baseHours": 198,
-      "withMultipliers": 198,
-      "totalHours": 198,
+      "baseHours": 195.0,
+      "withMultipliers": 195.0,
+      "totalHours": 195.0,
       "fte": 0.5,
-      "cost": 13860
+      "cost": 13650.0
     },
     {
       "role": "SM",
-      "baseHours": 198,
-      "withMultipliers": 198,
-      "totalHours": 198,
+      "baseHours": 195.0,
+      "withMultipliers": 195.0,
+      "totalHours": 195.0,
       "fte": 0.5,
-      "cost": 14850
+      "cost": 14625.0
     }
   ],
   "teamComposition": [
@@ -69,7 +69,7 @@
     },
     {
       "role": "UX",
-      "count": 2,
+      "count": 1,
       "allocationPercentage": 100
     },
     {
@@ -83,13 +83,13 @@
       "allocationPercentage": 50
     }
   ],
-  "totalCost": 100695.97499999999,
-  "durationDays": 92.39999999999999,
-  "durationWeeks": 14,
+  "totalCost": 100260.98,
+  "durationDays": 91,
+  "durationWeeks": 13,
   "durationSprints": 7,
   "startDate": "2026-03-10",
-  "endDate": "2026-06-16",
-  "workingDays": 66,
+  "endDate": "2026-06-15",
+  "workingDays": 65,
   "assumptions": [
     "Working 6 productive hours per day",
     "Sprint length: 2 weeks",
@@ -109,7 +109,7 @@
       "role": "Fullstack",
       "startDate": "2026-03-10",
       "endDate": "2026-03-18",
-      "hours": 30.015,
+      "hours": 30.02,
       "days": 6
     },
     {
@@ -118,7 +118,7 @@
       "role": "QA",
       "startDate": "2026-03-10",
       "endDate": "2026-03-18",
-      "hours": 30.015,
+      "hours": 30.02,
       "days": 6
     },
     {
@@ -127,7 +127,7 @@
       "role": "Fullstack",
       "startDate": "2026-03-18",
       "endDate": "2026-03-23",
-      "hours": 15.0075,
+      "hours": 15.01,
       "days": 3
     },
     {
@@ -136,7 +136,7 @@
       "role": "QA",
       "startDate": "2026-03-18",
       "endDate": "2026-03-23",
-      "hours": 15.0075,
+      "hours": 15.01,
       "days": 3
     },
     {
@@ -199,7 +199,7 @@
       "role": "Fullstack",
       "startDate": "2026-04-08",
       "endDate": "2026-04-13",
-      "hours": 15.0075,
+      "hours": 15.01,
       "days": 3
     },
     {
@@ -208,7 +208,7 @@
       "role": "QA",
       "startDate": "2026-04-08",
       "endDate": "2026-04-13",
-      "hours": 15.0075,
+      "hours": 15.01,
       "days": 3
     },
     {
@@ -244,7 +244,7 @@
       "role": "Fullstack",
       "startDate": "2026-04-29",
       "endDate": "2026-05-08",
-      "hours": 30.015,
+      "hours": 30.02,
       "days": 6
     },
     {
@@ -253,7 +253,7 @@
       "role": "QA",
       "startDate": "2026-04-29",
       "endDate": "2026-05-08",
-      "hours": 30.015,
+      "hours": 30.02,
       "days": 6
     },
     {
