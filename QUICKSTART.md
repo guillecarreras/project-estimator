@@ -1,174 +1,142 @@
-# 🚀 Quick Start Guide
+# Quick Start - Database Persistence
 
-Get your project estimation tool running in 3 minutes!
-
-## Step 1: Install Dependencies
-
+## 1. Install Dependencies
 ```bash
 npm install
 ```
 
-## Step 2: Generate Example Files
-
+## 2. Start PostgreSQL
 ```bash
-npm run estimate -- --example
+npm run db:start
 ```
 
-This creates:
-- `backlog.json` - Sample project with 10 features
-- `config.json` - Estimation parameters
-
-## Step 3: Run Your First Estimation
-
+Or manually:
 ```bash
-npm run estimate
+psql -U postgres -c "CREATE DATABASE estimator;"
+psql -U postgres -c "CREATE DATABASE estimator_test;"
 ```
 
-You'll see:
-- ✅ Detailed console output with costs, timeline, team composition
-- ✅ `estimation.json` file with complete results
-
-## Alternative: Export to CSV
-
+## 3. Build & Run Migrations
 ```bash
-npm run estimate -- --csv
-```
-
-Generates:
-- `estimation.csv` - Full estimation report
-- `gantt.csv` - Timeline breakdown
-
-## View AI Prompt Templates
-
-```bash
-npm run estimate -- --prompts
-```
-
-Shows AI prompts for:
-- Effort estimation
-- Feature breakdown
-- Risk analysis
-- Stakeholder summaries
-
-## Customize Your Estimation
-
-### Option 1: Edit the Example Files
-
-After running `--example`, edit:
-- `backlog.json` - Add your features
-- `config.json` - Adjust parameters
-
-### Option 2: Create Your Own Files
-
-Create `my-backlog.json`:
-```json
-[
-  {
-    "epic": "Your Epic",
-    "feature": "Your Feature",
-    "tshirt_size": "M",
-    "roles": ["Fullstack", "QA"]
-  }
-]
-```
-
-Run with custom file:
-```bash
-npm run estimate -- --input my-backlog.json
-```
-
-## T-Shirt Size Reference
-
-| Size | Hours | When to Use |
-|------|-------|-------------|
-| XS   | 9h    | Trivial (config change, text update) |
-| S    | 18h   | Simple (basic CRUD, simple form) |
-| M    | 36h   | Moderate (user profile, search) |
-| L    | 72h   | Complex (auth system, reporting) |
-| XL   | 108h  | Very complex (payment integration) |
-| XXL  | 144h  | Major feature (admin dashboard) |
-| XXXL | 189h  | Epic-level (full checkout flow) |
-
-## Available Roles
-
-- **Fullstack** - Frontend + Backend development
-- **QA** - Quality Assurance (auto-calculated at 1:3 ratio)
-- **DevOps** - Infrastructure, CI/CD, deployment
-- **BA** - Business Analyst (auto-added at 50%)
-- **SM** - Scrum Master (auto-added at 50%)
-- **UX** - UX Designer (auto-added at 50%)
-
-## Customization
-
-### Change Hourly Rates
-
-Edit `src/config.ts`:
-```typescript
-export const ROLE_RATES: RoleRate[] = [
-  { role: 'Fullstack', hourlyRate: 100 }, // Changed from 85
-  { role: 'QA', hourlyRate: 70 },
-  // ...
-];
-```
-
-### Adjust Multipliers
-
-Edit `config.json`:
-```json
-{
-  "contingencyPercentage": 20,
-  "bugFixingPercentage": 25,
-  "hoursPerDay": 7
-}
-```
-
-## Common Commands
-
-```bash
-# Help
-npm run estimate -- --help
-
-# Generate examples
-npm run estimate -- --example
-
-# Run with custom config
-npm run estimate -- --input backlog.json --config my-config.json
-
-# Export to CSV
-npm run estimate -- --csv
-
-# View AI prompts
-npm run estimate -- --prompts
-
-# Build for production
 npm run build
-npm start
+npm run migration:run
 ```
+
+This automatically:
+- Creates tables (projects, estimations, snapshots)
+- Creates indexes and foreign keys
+- Seeds 3 example projects with data
+
+## 4. Start API Server
+```bash
+npm run api:dev
+```
+
+Server runs on http://localhost:3000
+
+## 5. Test Endpoints
+
+### Create Project
+```bash
+curl -X POST http://localhost:3000/api/projects \
+  -H "Content-Type: application/json" \
+  -d '{"name":"My Project"}'
+```
+
+### List Projects
+```bash
+curl http://localhost:3000/api/projects
+```
+
+### Create Estimation (use projectId from above)
+```bash
+curl -X POST http://localhost:3000/api/estimations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "projectId":"<uuid>",
+    "backlogJson":[{"epic":"E1","feature":"F1","tshirt_size":"M","roles":["Fullstack"]}],
+    "configJson":{"hoursPerDay":8,"sprintLengthWeeks":2,"unitTestingPercentage":20,"bugFixingPercentage":15,"documentationPercentage":10,"contingencyPercentage":20,"startDate":"2024-05-01"},
+    "resultJson":{"backlogItemCount":1,"totalBaseHours":100,"roleEfforts":[{"role":"Fullstack","baseHours":100,"withMultipliers":120,"totalHours":120,"fte":0.75,"cost":12000}],"teamComposition":[{"role":"Fullstack","count":1,"allocationPercentage":100}],"totalCost":12000,"durationDays":15,"durationWeeks":2.14,"durationSprints":1.07,"startDate":"2024-05-01","endDate":"2024-05-16","workingDays":11,"assumptions":[],"ganttData":[]}
+  }'
+```
+
+### Record Actual Hours/Cost (use estimationId from above)
+```bash
+curl -X POST http://localhost:3000/api/snapshots \
+  -H "Content-Type: application/json" \
+  -d '{"estimationId":"<uuid>","actualHours":150,"actualCost":18000}'
+```
+
+### View Analytics
+```bash
+curl http://localhost:3000/api/analytics
+curl http://localhost:3000/api/analytics/<estimationId>
+```
+
+## 6. Run Tests
+```bash
+npm test
+```
+
+## 7. Stop PostgreSQL
+```bash
+npm run db:stop
+```
+
+## Files Created
+
+**Database Layer:**
+- `src/database/data-source.ts` - TypeORM config
+- `src/database/entities/` - Project, Estimation, Snapshot models
+- `src/database/repositories/` - CRUD operations
+- `src/database/migrations/` - Schema creation & seeding
+
+**API Layer:**
+- `src/api/server.ts` - Express server
+- `src/api/routes/` - endpoints (projects, estimations, snapshots, analytics)
+
+**Tests:**
+- `src/__tests__/repositories/` - Repository unit tests
+- `src/__tests__/api/` - API integration tests
+
+**Config:**
+- `package.json` - dependencies
+- `jest.config.js` - test runner
+- `tsconfig.json` - TypeScript config
+- `.env.example` - environment variables
+
+## API Reference
+
+See `DATABASE_SETUP.md` for full documentation.
+
+### Quick Reference
+- **Projects**: `POST /api/projects`, `GET /api/projects`, `GET /api/projects/:id`, `PUT /api/projects/:id`, `DELETE /api/projects/:id`
+- **Estimations**: `POST /api/estimations`, `GET /api/estimations`, `GET /api/estimations/:id`, `PUT /api/estimations/:id`, `DELETE /api/estimations/:id`
+- **Snapshots**: `POST /api/snapshots`, `GET /api/snapshots`, `GET /api/snapshots/:id`, `DELETE /api/snapshots/:id`
+- **Analytics**: `GET /api/analytics`, `GET /api/analytics/:estimationId`
 
 ## Troubleshooting
 
-**Q: `npm run estimate` fails**
-- Run `npm install` first
-- Make sure `backlog.json` exists (run `--example`)
+**Port 5432 in use**: 
+```bash
+npm run db:stop
+```
 
-**Q: Estimates seem off**
-- Adjust T-shirt sizes in your backlog
-- Modify multipliers in `config.json`
-- Check `src/config.ts` for rates
+**Connection refused**:
+```bash
+npm run db:start
+sleep 5
+npm run migration:run
+```
 
-**Q: Need more roles**
-- Edit `src/types.ts` to add role types
-- Update `src/config.ts` with rates and patterns
+**Tests fail**:
+```bash
+psql -U postgres -c "DROP DATABASE estimator_test;"
+psql -U postgres -c "CREATE DATABASE estimator_test;"
+npm test
+```
 
-## Next Steps
-
-1. ✅ Customize T-shirt sizes for your team velocity
-2. ✅ Update hourly rates to match your region
-3. ✅ Add your actual backlog items
-4. ✅ Experiment with AI prompts for better sizing
-5. ✅ Export results for stakeholder presentations
-
----
-
-**Need Help?** Check `README.md` for complete documentation!
-
+**Type errors**:
+```bash
+npm run build
+```

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Estimator - Web Dashboard</title>
+  <style>
+    :root {
+      --primary: #2196F3;
+      --primary-dark: #1976D2;
+      --success: #4CAF50;
+      --error: #f44336;
+      --warning: #ff9800;
+      --gray-light: #f5f5f5;
+      --gray-dark: #333;
+      --border: #ddd;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 968px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 25px;
+    }
+
+    .card h2 {
+      color: var(--gray-dark);
+      font-size: 18px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--gray-dark);
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    button.secondary {
+      background: #666;
+    }
+
+    button.secondary:hover {
+      background: #555;
+    }
+
+    button.success {
+      background: var(--success);
+    }
+
+    button.success:hover {
+      background: #45a049;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .button-group button {
+      flex: 1;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .alert.warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .badge.primary {
+      background: rgba(33, 150, 243, 0.1);
+      color: var(--primary);
+    }
+
+    .badge.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+    }
+
+    .badge.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--error);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      background: none;
+      border: none;
+      padding: 12px 20px;
+      color: #666;
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-button.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .results {
+      background: var(--gray-light);
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .results.show {
+      display: block;
+    }
+
+    .result-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-label {
+      font-weight: 600;
+      color: var(--gray-dark);
+    }
+
+    .result-value {
+      color: #666;
+      margin-top: 3px;
+    }
+
+    .spinner {
+      border: 3px solid var(--gray-light);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading {
+      text-align: center;
+      color: #666;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stats {
+      background: var(--gray-light);
+      padding: 15px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .stats-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .stats-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Project Estimator Dashboard</h1>
+      <p>AI-assisted project estimation tool for agile teams</p>
+    </header>
+
+    <div class="main">
+      <!-- Estimation Form -->
+      <div class="card">
+        <h2>Create Estimation</h2>
+
+        <div id="alert" class="alert"></div>
+
+        <div class="tabs">
+          <button class="tab-button active" data-tab="backlog">Backlog Items</button>
+          <button class="tab-button" data-tab="config">Configuration</button>
+        </div>
+
+        <!-- Backlog Tab -->
+        <div id="backlog" class="tab-content active">
+          <div class="form-group">
+            <label>Epic Name</label>
+            <input type="text" id="epic" placeholder="e.g., User Authentication">
+          </div>
+
+          <div class="form-group">
+            <label>Feature Description</label>
+            <input type="text" id="feature" placeholder="e.g., Login with Email">
+          </div>
+
+          <div class="form-group">
+            <label>Effort (T-Shirt Size)</label>
+            <select id="tshirt_size">
+              <option value="">Select Size</option>
+              <option value="XS">XS - Extra Small (1 day)</option>
+              <option value="S">S - Small (2 days)</option>
+              <option value="M">M - Medium (3 days)</option>
+              <option value="L">L - Large (5 days)</option>
+              <option value="XL">XL - Extra Large (8 days)</option>
+              <option value="XXL">XXL - Double Extra Large (13 days)</option>
+              <option value="XXXL">XXXL - Triple Extra Large (21 days)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Required Roles</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <label style="display: flex; align-items: center; font-weight: normal;">
+                <input type="checkbox" value="Fullstack" class="role-check"> Fullstack
+              </label>
+              <label style="display: flex; align-items: center; font-weight: normal;">
+                <input type="checkbox" value="QA" class="role-check"> QA
+              </label>
+              <label style="display: flex; align-items: center; font-weight: normal;">
+                <input type="checkbox" value="DevOps" class="role-check"> DevOps
+              </label>
+              <label style="display: flex; align-items: center; font-weight: normal;">
+                <input type="checkbox" value="BA" class="role-check"> BA
+              </label>
+              <label style="display: flex; align-items: center; font-weight: normal;">
+                <input type="checkbox" value="SM" class="role-check"> SM
+              </label>
+              <label style="display: flex; align-items: center; font-weight: normal;">
+                <input type="checkbox" value="UX" class="role-check"> UX
+              </label>
+            </div>
+          </div>
+
+          <button onclick="addBacklogItem()">Add Item</button>
+        </div>
+
+        <!-- Config Tab -->
+        <div id="config" class="tab-content">
+          <div class="form-group">
+            <label>Hours Per Day</label>
+            <input type="number" id="hoursPerDay" value="6" min="1" max="12">
+          </div>
+
+          <div class="form-group">
+            <label>Sprint Length (weeks)</label>
+            <input type="number" id="sprintLengthWeeks" value="2" min="1" max="4">
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Unit Testing %</label>
+              <input type="number" id="unitTestingPercentage" value="15" min="0" max="100">
+            </div>
+            <div class="form-group">
+              <label>Bug Fixing %</label>
+              <input type="number" id="bugFixingPercentage" value="20" min="0" max="100">
+            </div>
+            <div class="form-group">
+              <label>Documentation %</label>
+              <input type="number" id="documentationPercentage" value="10" min="0" max="100">
+            </div>
+            <div class="form-group">
+              <label>Contingency %</label>
+              <input type="number" id="contingencyPercentage" value="15" min="0" max="100">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" id="startDate">
+          </div>
+
+          <button class="success" onclick="runEstimation()">Run Estimation</button>
+        </div>
+
+        <!-- Backlog Items List -->
+        <div id="backlogList" class="results show" style="margin-top: 20px;">
+          <div style="font-weight: bold; margin-bottom: 10px;">Backlog Items (<span id="itemCount">0</span>)</div>
+          <div id="itemsContainer"></div>
+        </div>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="card">
+        <h2>Estimation Results</h2>
+
+        <div id="results" class="results">
+          <div class="result-item">
+            <div class="result-label">Total Items</div>
+            <div class="result-value" id="resultItems">-</div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">Total Base Hours</div>
+            <div class="result-value" id="resultBaseHours">-</div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">Project Duration</div>
+            <div class="result-value" id="resultDuration">-</div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">Project Cost</div>
+            <div class="result-value" id="resultCost">-</div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">Timeline</div>
+            <div class="result-value">
+              <div id="resultTimeline">-</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 15px;">
+            <button onclick="exportResults()" class="success" style="width: 100%;">Export Results</button>
+          </div>
+        </div>
+
+        <div id="emptyState" style="text-align: center; color: #999; padding: 40px 20px;">
+          <p>Run an estimation to see results</p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Project Estimator v1.0 | Real-time estimation powered by AI</p>
+    </footer>
+  </div>
+
+  <script>
+    const backlog = [];
+    let estimationResult = null;
+
+    // Tab switching
+    document.querySelectorAll('.tab-button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const tabName = e.target.dataset.tab;
+
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+        e.target.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+
+    // Set today's date as default
+    document.getElementById('startDate').valueAsDate = new Date();
+
+    function showAlert(message, type = 'success') {
+      const alert = document.getElementById('alert');
+      alert.className = `alert show ${type}`;
+      alert.textContent = message;
+      setTimeout(() => alert.classList.remove('show'), 5000);
+    }
+
+    function addBacklogItem() {
+      const epic = document.getElementById('epic').value;
+      const feature = document.getElementById('feature').value;
+      const tshirtSize = document.getElementById('tshirt_size').value;
+      const roles = Array.from(document.querySelectorAll('.role-check:checked')).map(c => c.value);
+
+      if (!epic || !feature || !tshirtSize) {
+        showAlert('Please fill in all fields', 'error');
+        return;
+      }
+
+      if (roles.length === 0) {
+        showAlert('Please select at least one role', 'error');
+        return;
+      }
+
+      backlog.push({ epic, feature, tshirt_size: tshirtSize, roles });
+
+      // Clear form
+      document.getElementById('epic').value = '';
+      document.getElementById('feature').value = '';
+      document.getElementById('tshirt_size').value = '';
+      document.querySelectorAll('.role-check').forEach(c => c.checked = false);
+
+      updateBacklogList();
+      showAlert('Item added successfully', 'success');
+    }
+
+    function updateBacklogList() {
+      const container = document.getElementById('itemsContainer');
+      const count = document.getElementById('itemCount');
+
+      count.textContent = backlog.length;
+
+      container.innerHTML = backlog.map((item, idx) => `
+        <div style="padding: 10px; background: white; border: 1px solid #eee; margin-bottom: 8px; border-radius: 4px;">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <strong>${item.feature}</strong>
+              <div style="font-size: 12px; color: #999; margin-top: 3px;">${item.epic}</div>
+              <div style="margin-top: 5px;">
+                <span class="badge primary">${item.tshirt_size}</span>
+                ${item.roles.map(r => `<span class="badge primary">${r}</span>`).join('')}
+              </div>
+            </div>
+            <button onclick="removeBacklogItem(${idx})" style="background: #f44336; padding: 6px 12px; font-size: 12px;">Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function removeBacklogItem(idx) {
+      backlog.splice(idx, 1);
+      updateBacklogList();
+    }
+
+    function runEstimation() {
+      if (backlog.length === 0) {
+        showAlert('Add at least one backlog item first', 'error');
+        return;
+      }
+
+      const config = {
+        hoursPerDay: parseInt(document.getElementById('hoursPerDay').value),
+        sprintLengthWeeks: parseInt(document.getElementById('sprintLengthWeeks').value),
+        unitTestingPercentage: parseInt(document.getElementById('unitTestingPercentage').value),
+        bugFixingPercentage: parseInt(document.getElementById('bugFixingPercentage').value),
+        documentationPercentage: parseInt(document.getElementById('documentationPercentage').value),
+        contingencyPercentage: parseInt(document.getElementById('contingencyPercentage').value),
+        startDate: document.getElementById('startDate').value,
+      };
+
+      // Simulate API call
+      setTimeout(() => {
+        estimationResult = {
+          backlogItemCount: backlog.length,
+          totalBaseHours: backlog.length * 24,
+          totalCost: backlog.length * 24 * 100,
+          durationDays: Math.ceil((backlog.length * 24) / config.hoursPerDay),
+          startDate: config.startDate,
+          endDate: new Date(new Date(config.startDate).getTime() + Math.ceil((backlog.length * 24) / config.hoursPerDay) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        };
+
+        displayResults();
+        showAlert('Estimation completed!', 'success');
+      }, 500);
+    }
+
+    function displayResults() {
+      if (!estimationResult) return;
+
+      document.getElementById('results').classList.add('show');
+      document.getElementById('emptyState').style.display = 'none';
+
+      document.getElementById('resultItems').textContent = estimationResult.backlogItemCount;
+      document.getElementById('resultBaseHours').textContent = estimationResult.totalBaseHours.toFixed(0) + ' hours';
+      document.getElementById('resultDuration').textContent = estimationResult.durationDays + ' days';
+      document.getElementById('resultCost').textContent = '$' + estimationResult.totalCost.toLocaleString();
+      document.getElementById('resultTimeline').textContent =
+        `${estimationResult.startDate} to ${estimationResult.endDate}`;
+    }
+
+    function exportResults() {
+      if (!estimationResult) {
+        showAlert('No results to export', 'error');
+        return;
+      }
+
+      const data = {
+        estimation: estimationResult,
+        backlog: backlog,
+        exportDate: new Date().toISOString(),
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `estimation-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      showAlert('Results exported successfully', 'success');
+    }
+  </script>
+</body>
+</html>

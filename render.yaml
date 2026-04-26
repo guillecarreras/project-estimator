@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: project-estimator
+    runtime: node
+    region: oregon
+    plan: free
+
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/api/server.js
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: postgres
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: LOG_LEVEL
+        value: info
+
+  - type: postgres
+    name: postgres
+    region: oregon
+    plan: free
+    databaseName: project_estimator
+    user: postgres
+
+    ipAllowList: []

@@ -7,7 +7,17 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "estimate": "ts-node src/index.ts"
+    "estimate": "ts-node src/index.ts",
+    "db:start": "docker run --name postgres-estimator -e POSTGRES_PASSWORD=password -e POSTGRES_DB=estimator -d -p 5432:5432 postgres:15",
+    "db:stop": "docker stop postgres-estimator && docker rm postgres-estimator",
+    "migration:run": "typeorm migration:run -d dist/database/data-source.js",
+    "migration:create": "typeorm migration:create",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "api:dev": "ts-node src/api/server.ts",
+    "api:start": "node dist/api/server.js",
+    "lint": "tsc --noEmit"
   },
   "keywords": [
     "estimation",
@@ -18,12 +28,22 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "date-fns": "^2.30.0"
+    "date-fns": "^2.30.0",
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "typeorm": "^0.3.19"
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.10.0",
+    "@types/supertest": "^2.0.12",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "ts-node-dev": "^2.0.0"
   }
 }
 

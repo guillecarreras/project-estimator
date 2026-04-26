@@ -24,27 +24,57 @@ npm install
 npm run build
 ```
 
-## 🚀 Quick Start
+## ☁️ Deploy to Render (Cloud)
 
-### 1. Generate Example Files
+One-click deploy:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/guillecarreras/project-estimator)
+
+Or see [RENDER_DEPLOY.md](./RENDER_DEPLOY.md) for detailed instructions.
+
+**After deploy:**
+- App URL: `https://project-estimator.onrender.com`
+- Username: `admin`
+- Password: `demo123`
+
+---
+
+## 🚀 Quick Start (Local)
+
+### 1. Install & Build
+
+```bash
+npm install
+npm run build
+```
+
+### 2. Start Server
+
+```bash
+npm start
+# App runs on http://localhost:3000
+```
+
+### 3. Access API
+
+```bash
+# Login
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"demo123"}'
+
+# Create estimation
+curl -X POST http://localhost:3000/api/estimations \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"projectId":"1","backlog":[...]}'
+```
+
+### 4. CLI Tool (Legacy)
 
 ```bash
 npm run estimate -- --example
-```
-
-This creates:
-- `backlog.json` - Sample backlog with 10 items
-- `config.json` - Estimation parameters
-
-### 2. Run Estimation
-
-```bash
 npm run estimate
-```
-
-Or with custom input:
-
-```bash
 npm run estimate -- --input my-backlog.json --csv
 ```
 

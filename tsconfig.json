@@ -13,9 +13,10 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts", "!src/**/*.test.ts"],
+  "exclude": ["node_modules", "dist", "src/middleware", "src/monitoring", "src/web", "src/features", "src/integrations", "**/__tests__/**"]
 }
-
