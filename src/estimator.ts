@@ -83,14 +83,16 @@ export class ProjectEstimator {
 
     // Add QA based on dev ratio if not already in backlog
     if (!baseHours.has('QA') && totalDevHours > 0) {
-      const qaHours = totalDevHours * QA_RATIO;
+      const qaBaseHours = totalDevHours * QA_RATIO;
+      const qaWithMultipliers = this.applyMultipliers(qaBaseHours);
+      const qaTotalHours = this.applyContingency(qaWithMultipliers);
       roleEfforts.push({
         role: 'QA',
-        baseHours: qaHours,
-        withMultipliers: qaHours,
-        totalHours: qaHours,
-        fte: qaHours / (this.config.hoursPerDay * 5 * this.config.sprintLengthWeeks),
-        cost: qaHours * getRateByRole('QA'),
+        baseHours: qaBaseHours,
+        withMultipliers: qaWithMultipliers,
+        totalHours: qaTotalHours,
+        fte: qaTotalHours / (this.config.hoursPerDay * 5 * this.config.sprintLengthWeeks),
+        cost: qaTotalHours * getRateByRole('QA'),
       });
     }
 
@@ -104,6 +106,11 @@ export class ProjectEstimator {
     sprints: number;
     workingDays: number;
   } {
+    // Handle empty backlog
+    if (roleEfforts.length === 0) {
+      return { days: 0, weeks: 0, sprints: 0, workingDays: 0 };
+    }
+
     // Find critical path (maximum hours among development roles)
     const maxHours = Math.max(...roleEfforts.map((r) => r.totalHours));
 
