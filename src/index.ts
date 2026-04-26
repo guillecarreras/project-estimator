@@ -6,6 +6,7 @@ import { DEFAULT_CONFIG } from './config';
 import { ExportUtils } from './exportUtils';
 import { TeamAllocator } from './teamAllocator';
 import { PromptTemplates } from './promptTemplates';
+import { validateBacklog, validateConfig } from './validation';
 import * as fs from 'fs';
 
 /**
@@ -52,7 +53,15 @@ function main() {
   try {
     // Load backlog
     const backlogData = fs.readFileSync(inputFile, 'utf-8');
-    const backlog: BacklogItem[] = JSON.parse(backlogData);
+    let backlog: BacklogItem[];
+    try {
+      backlog = validateBacklog(JSON.parse(backlogData));
+    } catch (parseError) {
+      if (parseError instanceof SyntaxError) {
+        throw new Error(`Invalid JSON in ${inputFile}: ${parseError.message}`);
+      }
+      throw parseError;
+    }
 
     console.log(`📂 Loaded ${backlog.length} items from ${inputFile}`);
 
@@ -60,8 +69,14 @@ function main() {
     let config: EstimationConfig = { ...DEFAULT_CONFIG };
     if (configFile && fs.existsSync(configFile)) {
       const configData = fs.readFileSync(configFile, 'utf-8');
-      const customConfig = JSON.parse(configData);
-      config = { ...config, ...customConfig };
+      let customConfig: any;
+      try {
+        customConfig = JSON.parse(configData);
+      } catch (parseError) {
+        throw new Error(`Invalid JSON in ${configFile}: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+      }
+      const validatedConfig = validateConfig(customConfig);
+      config = { ...config, ...validatedConfig };
       console.log(`⚙️  Loaded custom config from ${configFile}`);
     } else {
       console.log(`⚙️  Using default configuration`);
