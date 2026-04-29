@@ -44,3 +44,4 @@ coverage/
 !/src/
 !/scripts/
 !/tests/
+estimation.json
