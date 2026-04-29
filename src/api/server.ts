@@ -6,6 +6,10 @@ import { createProjectRoutes } from './routes/projects';
 import { createEstimationRoutes } from './routes/estimations';
 import { createSnapshotRoutes } from './routes/snapshots';
 import { createAnalyticsRoutes } from './routes/analytics';
+import { createAuthRoutes } from './routes/auth';
+import { createJiraRoutes } from './routes/jira-integration';
+import dependenciesRouter from './routes/dependencies';
+import { verifyTokenMiddleware } from '../middleware/authMiddleware';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -38,20 +42,49 @@ async function startServer() {
     await AppDataSource.initialize();
     console.log('Database connection established');
 
-    app.use('/api/projects', createProjectRoutes(AppDataSource));
-    app.use('/api/estimations', createEstimationRoutes(AppDataSource));
-    app.use('/api/snapshots', createSnapshotRoutes(AppDataSource));
-    app.use('/api/analytics', createAnalyticsRoutes(AppDataSource));
+    // Auth routes (public)
+    app.use('/api/auth', createAuthRoutes(AppDataSource));
+
+    // Protected routes
+    app.use('/api/projects', verifyTokenMiddleware, createProjectRoutes(AppDataSource));
+    app.use('/api/estimations', verifyTokenMiddleware, createEstimationRoutes(AppDataSource));
+    app.use('/api/snapshots', verifyTokenMiddleware, createSnapshotRoutes(AppDataSource));
+    app.use('/api/analytics', verifyTokenMiddleware, createAnalyticsRoutes(AppDataSource));
+    app.use('/api/integrations/jira', verifyTokenMiddleware, createJiraRoutes(AppDataSource));
+
+    // Public dependencies routes (useful for analysis without auth)
+    app.use('/api/features/dependencies', dependenciesRouter);
 
     app.get('/api/info', (req: Request, res: Response) => {
       res.json({
         name: 'Project Estimator API',
         version: '1.0.0',
+        authentication: {
+          description: 'All endpoints except /api/auth/* and /api/features/dependencies/* require JWT token in Authorization header',
+          header: 'Authorization: Bearer <token>',
+          login: 'POST /api/auth/login',
+          register: 'POST /api/auth/register',
+          refresh: 'POST /api/auth/refresh',
+          logout: 'POST /api/auth/logout',
+          me: 'GET /api/auth/me',
+        },
         endpoints: {
           projects: 'POST/GET/PUT/DELETE /api/projects/:id',
           estimations: 'POST/GET/PUT/DELETE /api/estimations/:id',
           snapshots: 'POST/GET/DELETE /api/snapshots/:id',
           analytics: 'GET /api/analytics/:estimationId',
+          dependencies: {
+            analyze: 'POST /api/features/dependencies/analyze',
+            schedule: 'POST /api/features/dependencies/schedule',
+            precedenceDiagram: 'POST /api/features/dependencies/precedence-diagram',
+            ganttChart: 'POST /api/features/dependencies/gantt-chart',
+            validate: 'POST /api/features/dependencies/validate',
+            slackAnalysis: 'POST /api/features/dependencies/slack-analysis',
+            estimationWithDeps: 'POST /api/features/dependencies/estimation-with-dependencies',
+            bottlenecks: 'POST /api/features/dependencies/bottlenecks',
+            whatIf: 'POST /api/features/dependencies/what-if',
+            detect: 'POST /api/features/dependencies/detect',
+          },
         },
       });
     });

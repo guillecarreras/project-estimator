@@ -78,17 +78,47 @@ export class JiraClient {
   }
 
   /**
-   * Search for issues using JQL
+   * Search for issues using JQL with pagination support
    */
-  async searchIssues(jql: string): Promise<JiraIssue[]> {
+  async searchIssues(jql: string, startAt: number = 0, maxResults: number = 100): Promise<JiraIssue[]> {
     try {
-      const response = await this.makeRequest('POST', '/search', {
-        jql,
-        maxResults: 100,
-        fields: ['key', 'summary', 'description', 'issuetype', 'priority', 'customfield_10026'],
-      });
+      const allIssues: JiraIssue[] = [];
+      let hasMore = true;
+      let currentStart = startAt;
 
-      return response.issues.map((issue: any) => this.parseIssueResponse(issue));
+      while (hasMore) {
+        const response = await this.makeRequest('POST', '/search', {
+          jql,
+          startAt: currentStart,
+          maxResults,
+          fields: [
+            'key',
+            'summary',
+            'description',
+            'issuetype',
+            'priority',
+            'customfield_10026',
+            'labels',
+            'components',
+            'status',
+          ],
+        });
+
+        const issues = response.issues.map((issue: any) => this.parseIssueResponse(issue));
+        allIssues.push(...issues);
+
+        // Check if there are more results
+        hasMore = response.startAt + response.maxResults < response.total;
+        currentStart += maxResults;
+
+        // Safety check to prevent infinite loops
+        if (currentStart > 10000) {
+          console.warn(`Jira search result limit reached at 10000 issues`);
+          hasMore = false;
+        }
+      }
+
+      return allIssues;
     } catch (error) {
       throw new Error(`Failed to search Jira issues: ${error instanceof Error ? error.message : error}`);
     }
@@ -166,6 +196,45 @@ export class JiraClient {
 
       req.end();
     });
+  }
+
+  /**
+   * Get issues from a specific board
+   */
+  async getBoard(boardId: number): Promise<any> {
+    try {
+      const response = await this.makeRequest('GET', `/boards/${boardId}`, {});
+      return response;
+    } catch (error) {
+      throw new Error(`Failed to get board: ${error instanceof Error ? error.message : error}`);
+    }
+  }
+
+  /**
+   * Get issues from board
+   */
+  async getBoardIssues(boardId: number, status?: string): Promise<JiraIssue[]> {
+    try {
+      let jql = `board = ${boardId}`;
+      if (status) {
+        jql += ` AND status = "${status}"`;
+      }
+      return await this.searchIssues(jql);
+    } catch (error) {
+      throw new Error(`Failed to get board issues: ${error instanceof Error ? error.message : error}`);
+    }
+  }
+
+  /**
+   * Get list of available boards for a project
+   */
+  async getBoards(projectKey: string): Promise<any[]> {
+    try {
+      const response = await this.makeRequest('GET', `/boards?projectKey=${projectKey}`, {});
+      return response.values || [];
+    } catch (error) {
+      throw new Error(`Failed to get boards: ${error instanceof Error ? error.message : error}`);
+    }
   }
 
   /**

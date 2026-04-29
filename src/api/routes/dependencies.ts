@@ -7,6 +7,9 @@ import { Router, Request, Response } from 'express';
 import { Task, ScheduleAnalysis } from '../../features/dependencies/models';
 import { DependencyCalculator } from '../../features/dependencies/calculator';
 import { GanttGenerator } from '../../features/dependencies/gantt';
+import { DependencyDetector } from '../../features/dependencies/detector';
+import { EstimatorIntegration } from '../../features/dependencies/estimator-integration';
+import { BacklogItem, EstimationConfig, EstimationResult } from '../../types';
 
 const router = Router();
 
@@ -260,6 +263,167 @@ router.post('/slack-analysis', (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Slack analysis failed',
+    });
+  }
+});
+
+/**
+ * POST /api/features/dependencies/estimation-with-dependencies
+ * Calculate project estimation using critical path analysis from backlog
+ */
+router.post('/estimation-with-dependencies', (req: Request, res: Response) => {
+  try {
+    const {
+      backlog,
+      config,
+      baseEstimation,
+    }: {
+      backlog: BacklogItem[];
+      config: EstimationConfig;
+      baseEstimation: EstimationResult;
+    } = req.body;
+
+    if (!backlog || !Array.isArray(backlog) || !config || !baseEstimation) {
+      return res.status(400).json({
+        error: 'Missing required fields: backlog, config, baseEstimation',
+      });
+    }
+
+    const estimationWithDeps = EstimatorIntegration.calculateEstimationWithDependencies(
+      baseEstimation,
+      backlog,
+      config
+    );
+
+    res.json({
+      success: true,
+      estimation: estimationWithDeps,
+      summary: {
+        criticalPathDuration: estimationWithDeps.criticalPathDuration,
+        criticalTasks: estimationWithDeps.criticalTasksCount,
+        impactPercent: estimationWithDeps.dependencyImpact,
+        message: `Critical path: ${estimationWithDeps.criticalPathDuration} days, ${estimationWithDeps.criticalTasksCount} tasks on critical path`,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Estimation with dependencies failed',
+    });
+  }
+});
+
+/**
+ * POST /api/features/dependencies/bottlenecks
+ * Identify project bottlenecks and critical path constraints
+ */
+router.post('/bottlenecks', (req: Request, res: Response) => {
+  try {
+    const { backlog, config }: { backlog: BacklogItem[]; config: EstimationConfig } = req.body;
+
+    if (!backlog || !Array.isArray(backlog) || !config) {
+      return res.status(400).json({
+        error: 'Missing required fields: backlog, config',
+      });
+    }
+
+    const bottlenecks = EstimatorIntegration.identifyBottlenecks(backlog, config);
+
+    res.json({
+      success: true,
+      ...bottlenecks,
+      summary: {
+        criticalTasksCount: bottlenecks.criticalTasks.length,
+        bottlenecksCount: bottlenecks.bottlenecks.length,
+        actionsCount: bottlenecks.recommendedActions.length,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Bottleneck analysis failed',
+    });
+  }
+});
+
+/**
+ * POST /api/features/dependencies/what-if
+ * Calculate what-if scenarios for adding/removing tasks
+ */
+router.post('/what-if', (req: Request, res: Response) => {
+  try {
+    const {
+      backlog,
+      config,
+      modifications,
+    }: {
+      backlog: BacklogItem[];
+      config: EstimationConfig;
+      modifications: {
+        addTasks?: BacklogItem[];
+        removeTasks?: string[];
+        adjustDurations?: { [featureName: string]: number };
+      };
+    } = req.body;
+
+    if (!backlog || !Array.isArray(backlog) || !config || !modifications) {
+      return res.status(400).json({
+        error: 'Missing required fields: backlog, config, modifications',
+      });
+    }
+
+    const result = EstimatorIntegration.calculateWhatIf(backlog, config, modifications);
+
+    res.json({
+      success: true,
+      ...result,
+      scenario: {
+        originalDuration: result.original,
+        modifiedDuration: result.modified,
+        absoluteImpact: result.impact,
+        percentageImpact: Math.round((result.impact / result.original) * 100),
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'What-if analysis failed',
+    });
+  }
+});
+
+/**
+ * POST /api/features/dependencies/detect
+ * Detect dependencies from backlog items
+ */
+router.post('/detect', (req: Request, res: Response) => {
+  try {
+    const { backlog }: { backlog: BacklogItem[] } = req.body;
+
+    if (!backlog || !Array.isArray(backlog)) {
+      return res.status(400).json({
+        error: 'Missing required field: backlog (array)',
+      });
+    }
+
+    const tasks = DependencyDetector.convertBacklogToTasks(backlog);
+    const dependencies = DependencyDetector.extractFeatureDependencies(backlog);
+    const validation = DependencyDetector.validateDependencyReferences(backlog, dependencies);
+
+    res.json({
+      success: true,
+      tasks,
+      detectedDependencies: Array.from(dependencies.entries()).map(([source, targets]) => ({
+        source,
+        targets,
+      })),
+      validation,
+      summary: {
+        tasksCount: tasks.length,
+        dependenciesCount: dependencies.size,
+        valid: validation.valid,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Dependency detection failed',
     });
   }
 });

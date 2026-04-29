@@ -3,8 +3,10 @@ import { DataSource } from 'typeorm';
 import { Project } from './entities/Project';
 import { Estimation } from './entities/Estimation';
 import { Snapshot } from './entities/Snapshot';
+import { User } from './entities/User';
 import { InitialSchema1714185600000 } from './migrations/1714185600000-InitialSchema';
 import { SeedData1714185600001 } from './migrations/1714185600001-SeedData';
+import { AddUsersTable1714185600002 } from './migrations/1714185600002-AddUsersTable';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -15,8 +17,8 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'estimator',
   synchronize: false,
   logging: process.env.NODE_ENV !== 'test',
-  entities: [Project, Estimation, Snapshot],
-  migrations: [InitialSchema1714185600000, SeedData1714185600001],
+  entities: [Project, Estimation, Snapshot, User],
+  migrations: [InitialSchema1714185600000, SeedData1714185600001, AddUsersTable1714185600002],
   subscribers: [],
   migrationsRun: true,
 });

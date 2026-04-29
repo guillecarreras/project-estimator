@@ -21,6 +21,7 @@ export function createAnalyticsRoutes(dataSource: DataSource): Router {
 
   router.get('/', async (req: Request, res: Response) => {
     try {
+      const timestamp = new Date().toISOString();
       const estimations = await estimationRepository.findAll();
       const analytics: AnalyticsData[] = [];
 
@@ -53,7 +54,11 @@ export function createAnalyticsRoutes(dataSource: DataSource): Router {
         });
       }
 
-      res.json(analytics);
+      res.json({
+        data: analytics,
+        count: analytics.length,
+        timestamp,
+      });
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
     }
@@ -62,15 +67,35 @@ export function createAnalyticsRoutes(dataSource: DataSource): Router {
   router.get('/:estimationId', async (req: Request, res: Response) => {
     try {
       const { estimationId } = req.params;
+      const timestamp = new Date().toISOString();
+
+      if (!estimationId || estimationId.trim().length === 0) {
+        res.status(400).json({
+          error: 'ValidationError',
+          message: 'Estimation ID is required',
+          timestamp,
+        });
+        return;
+      }
+
       const estimation = await estimationRepository.findById(estimationId);
 
       if (!estimation) {
-        res.status(404).json({ error: 'Estimation not found' });
+        res.status(404).json({
+          error: 'NotFoundError',
+          message: `Estimation with ID ${estimationId} not found`,
+          timestamp,
+        });
         return;
       }
 
       if (estimation.snapshots.length === 0) {
-        res.json({ message: 'No snapshots available for this estimation' });
+        res.json({
+          data: null,
+          message: 'No snapshots available for this estimation',
+          estimationId,
+          timestamp,
+        });
         return;
       }
 
@@ -101,8 +126,11 @@ export function createAnalyticsRoutes(dataSource: DataSource): Router {
       });
 
       res.json({
-        estimationId,
-        snapshots: snapshotAnalytics,
+        data: {
+          estimationId,
+          snapshots: snapshotAnalytics,
+        },
+        timestamp,
       });
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
